@@ -97,6 +97,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
+                    android:id="@+id/writeSensorDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/escrever_dados" />
+                <Button
                     android:id="@+id/readReg03Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

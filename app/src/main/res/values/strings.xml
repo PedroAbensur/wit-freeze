@@ -35,4 +35,6 @@
     <string name="End_field_calibration">Fim da calibração </string>
     <string name="Start_field_calibration">Iniciar calibração</string>
     <string name="read_reg_03">Ler registro 03</string>
+    <string name="escrever_dados">Escrever dados</string>
+    <string name="parar_escrita">Parar Escrita</string>
 </resources>
