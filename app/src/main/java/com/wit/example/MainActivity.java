@@ -279,12 +279,11 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.parar_escrita));
             writeOnSensorData = true;
 
-            writeThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (writeOnSensorData) {
-                        writeSensorData("test.csv", true);
-                    }
+            writeThread = new Thread(() -> {
+                boolean isFirstTime = true;
+                while (writeOnSensorData) {
+                    writeSensorData("test.csv", isFirstTime);
+                    isFirstTime = false;
                 }
             });
 
@@ -292,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         } else {
             writeOnSensorData = false;
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
-            writeThread.destroy();
         }
     }
 
