@@ -6,7 +6,6 @@ import java.util.Date;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -207,6 +206,28 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         return builder.toString();
     }
 
+    private String buildSensorDataTable() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("time,");
+        builder.append("accX,");
+        builder.append("accZ,");
+        builder.append("asX,");
+        builder.append("asY,");
+        builder.append("asZ,");
+        builder.append("angleX,");
+        builder.append("angleY,");
+        builder.append("angleZ,");
+        builder.append("hX,");
+        builder.append("hY,");
+        builder.append("hZ,");
+        builder.append("t,");
+        builder.append("power,");
+        builder.append("version");
+
+        return builder.toString();
+    }
+
     private String buildSensorData(Bwt901ble bwt901ble) {
         StringBuilder builder = new StringBuilder();
 
@@ -214,30 +235,34 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
         builder.append(currentTime).append("\n");
         builder.append(bwt901ble.getDeviceName()).append("\n");
-        builder.append(getString(R.string.accX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append("g \t");
-        builder.append(getString(R.string.accY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append("g \t");
-        builder.append(getString(R.string.accZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append("g \n");
-        builder.append(getString(R.string.asX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append("°/s \t");
-        builder.append(getString(R.string.asY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append("°/s \t");
-        builder.append(getString(R.string.asZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append("°/s \n");
-        builder.append(getString(R.string.angleX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append("° \t");
-        builder.append(getString(R.string.angleY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append("° \t");
-        builder.append(getString(R.string.angleZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append("° \n");
-        builder.append(getString(R.string.hX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HX)).append("\t");
-        builder.append(getString(R.string.hY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HY)).append("\t");
-        builder.append(getString(R.string.hZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append("\n");
-        builder.append(getString(R.string.t)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.T)).append("\n");
-        builder.append(getString(R.string.electricQuantityPercentage)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.ElectricQuantityPercentage)).append("\n");
-        builder.append(getString(R.string.versionNumber)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.VersionNumber)).append("\n");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HX)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HY)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.T)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.ElectricQuantityPercentage)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.VersionNumber)).append("\n");
 
         return builder.toString();
     }
 
     private void writeSensorData() {
+        String fileName = "test.csv";
+
+        File file = new File(getApplicationContext().getFileStreamPath(fileName).getAbsolutePath());
+        if (file.exists()) {
+            file.delete();
+        }
+
         OutputStreamWriter outputStreamWriter = null;
-
-        String fileName = "test.txt";
-
         try {
             outputStreamWriter =
                     new OutputStreamWriter(
@@ -248,22 +273,18 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         }
 
         try {
-            while (writeOnSensorData) {
-                Bwt901ble bwt901ble = null;
-                for (int i = 0; i < bwt901bleList.size(); i++) {
-                    bwt901ble = bwt901bleList.get(i);
-                }
+            outputStreamWriter.write(buildSensorDataTable());
+
+            for (int i = 0; i < bwt901bleList.size(); i++) {
+                Bwt901ble bwt901ble = bwt901bleList.get(i);
                 outputStreamWriter.write(buildSensorData(bwt901ble));
-                outputStreamWriter.flush();
             }
+
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e(TAG, "Error while writing to the file: " + e);
         }
-
     }
-
-
 
     public void handleWriteSensorDataButton() {
         if (writeSensorDataButton == null) {
@@ -274,11 +295,20 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.parar_escrita));
             writeOnSensorData = true;
 
-            writeThread = new Thread(this::writeSensorData);
+            writeThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (writeOnSensorData) {
+                        writeSensorData();
+                    }
+                }
+            });
+
             writeThread.start();
         } else {
             writeOnSensorData = false;
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
+            writeThread.destroy();
         }
     }
 
