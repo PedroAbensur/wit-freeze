@@ -202,10 +202,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         builder.append("angleZ,");
         builder.append("hX,");
         builder.append("hY,");
-        builder.append("hZ,");
-        builder.append("t,");
-        builder.append("power,");
-        builder.append("version\n");
+        builder.append("hZ\n");
 
         return builder.toString();
     }
@@ -215,8 +212,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        builder.append(currentTime).append("\n");
-        builder.append(bwt901ble.getDeviceName()).append("\n");
+        builder.append(currentTime).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append(",");
@@ -229,9 +225,6 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HX)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HY)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.T)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.ElectricQuantityPercentage)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.VersionNumber)).append("\n");
 
         return builder.toString();
     }
