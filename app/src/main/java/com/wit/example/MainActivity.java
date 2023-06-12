@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,12 +29,12 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private List<Bwt901ble> bwt901bleList = new ArrayList<>();
-    private Thread writeThread = null;
 
     private boolean destroyed = true;
     private boolean writeOnSensorData = false;
-
     private Button writeSensorDataButton = null;
+
+    private String writeContent = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             handleReadReg03();
         });
 
-        writeOnSensorData = false;
         writeSensorDataButton = findViewById(R.id.writeSensorDateButton);
         writeSensorDataButton.setOnClickListener((v) -> {
             handleWriteSensorDataButton();
@@ -270,6 +270,36 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         }
     }
 
+    private void writeSensorDataString(String fileName, boolean deleteOld) {
+        File file = new File(getExternalFilesDir(null), fileName);
+        boolean fileExists = file.exists();
+
+        if (fileExists && deleteOld) {
+            file.delete();
+            fileExists = false;
+        }
+
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            fileWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(fileWriter);
+        } catch (IOException e) {
+            Log.e(TAG, "Error while handling the file: " + e);
+            return;
+        }
+
+        try {
+            if (!fileExists)
+                bufferedWriter.write(buildSensorDataTable());
+            bufferedWriter.write(writeContent);
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error while writing to the file: " + e);
+        }
+    }
+
     public void handleWriteSensorDataButton() {
         if (writeSensorDataButton == null) {
             return;
@@ -279,18 +309,25 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.parar_escrita));
             writeOnSensorData = true;
 
-            writeThread = new Thread(() -> {
-                boolean isFirstTime = true;
+            final Thread thread = new Thread(() -> {
+                writeContent = "";
+                Bwt901ble bwt901ble = null;
+                for (int i = 0; i < bwt901bleList.size(); i++) {
+                    bwt901ble = bwt901bleList.get(i);
+                }
                 while (writeOnSensorData) {
-                    writeSensorData("test.csv", isFirstTime);
-                    isFirstTime = false;
+                    writeContent += buildSensorData(bwt901ble);
                 }
             });
-
-            writeThread.start();
+            thread.start();
         } else {
             writeOnSensorData = false;
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
+
+            final Thread thread = new Thread(() -> {
+                writeSensorDataString("test.csv", true);
+            });
+            thread.start();
         }
     }
 
