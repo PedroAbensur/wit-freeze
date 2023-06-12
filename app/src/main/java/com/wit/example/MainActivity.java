@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
     @Override
     public void onRecord(Bwt901ble bwt901ble) {
-        String deviceData = getDeviceData(bwt901ble);
+        String deviceData = buildSensorDataTable() + buildSensorData(bwt901ble);
         Log.d(TAG, "device data [ " + bwt901ble.getDeviceName() + "] = " + deviceData);
     }
 
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             for (int i = 0; i < bwt901bleList.size(); i++) {
                 // Make all devices accelerometer calibrated
                 Bwt901ble bwt901ble = bwt901bleList.get(i);
-                String deviceData = getDeviceData(bwt901ble);
+                String deviceData = buildSensorData(bwt901ble);
                 text.append(deviceData);
             }
 
@@ -161,49 +161,6 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                 deviceDataTextView.setText(text.toString());
             });
         }
-    }
-
-    private String getDeviceData(Bwt901ble bwt901ble) {
-        String content;
-        File file = new File(getExternalFilesDir(null), "dados_wit.txt");
-        FileOutputStream outputStream;
-        
-        StringBuilder builder = new StringBuilder();
-        Date currentTime = Calendar.getInstance().getTime();
-        builder.append(currentTime).append("\n");
-        builder.append(bwt901ble.getDeviceName()).append("\n");
-        builder.append(getString(R.string.accX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append("g \t");
-        builder.append(getString(R.string.accY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append("g \t");
-        builder.append(getString(R.string.accZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append("g \n");
-        builder.append(getString(R.string.asX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append("°/s \t");
-        builder.append(getString(R.string.asY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append("°/s \t");
-        builder.append(getString(R.string.asZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append("°/s \n");
-        builder.append(getString(R.string.angleX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append("° \t");
-        builder.append(getString(R.string.angleY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append("° \t");
-        builder.append(getString(R.string.angleZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append("° \n");
-        builder.append(getString(R.string.hX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HX)).append("\t");
-        builder.append(getString(R.string.hY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HY)).append("\t");
-        builder.append(getString(R.string.hZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append("\n");
-        builder.append(getString(R.string.t)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.T)).append("\n");
-        builder.append(getString(R.string.electricQuantityPercentage)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.ElectricQuantityPercentage)).append("\n");
-        builder.append(getString(R.string.versionNumber)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.VersionNumber)).append("\n");
-        content= builder.toString();
-
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-            // Escreva o conteúdo no arquivo
-            bufferedWriter.write(content);
-
-            // Lembre-se de fechar o BufferedWriter
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        builder.append("deu merda\n");
-        return builder.toString();
     }
 
     private String buildSensorDataTable() {
@@ -223,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         builder.append("hZ,");
         builder.append("t,");
         builder.append("power,");
-        builder.append("version");
+        builder.append("version\n");
 
         return builder.toString();
     }
@@ -254,33 +211,35 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         return builder.toString();
     }
 
-    private void writeSensorData() {
-        String fileName = "test.csv";
+    private void writeSensorData(String fileName, boolean deleteOld) {
+        File file = new File(getExternalFilesDir(null), fileName);
+        boolean fileExists = file.exists();
 
-        File file = new File(getApplicationContext().getFileStreamPath(fileName).getAbsolutePath());
-        if (file.exists()) {
+        if (fileExists && deleteOld) {
             file.delete();
+            fileExists = false;
         }
 
-        OutputStreamWriter outputStreamWriter = null;
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
         try {
-            outputStreamWriter =
-                    new OutputStreamWriter(
-                            getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE | Context.MODE_APPEND));
+            fileWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(fileWriter);
         } catch (IOException e) {
             Log.e(TAG, "Error while handling the file: " + e);
             return;
         }
 
         try {
-            outputStreamWriter.write(buildSensorDataTable());
+            if (!fileExists)
+                bufferedWriter.write(buildSensorDataTable());
 
             for (int i = 0; i < bwt901bleList.size(); i++) {
                 Bwt901ble bwt901ble = bwt901bleList.get(i);
-                outputStreamWriter.write(buildSensorData(bwt901ble));
+                bufferedWriter.write(buildSensorData(bwt901ble));
             }
 
-            outputStreamWriter.close();
+            bufferedWriter.close();
         } catch (IOException e) {
             Log.e(TAG, "Error while writing to the file: " + e);
         }
@@ -299,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                 @Override
                 public void run() {
                     while (writeOnSensorData) {
-                        writeSensorData();
+                        writeSensorData("test.csv", true);
                     }
                 }
             });
