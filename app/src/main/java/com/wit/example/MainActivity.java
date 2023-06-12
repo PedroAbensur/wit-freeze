@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
         builder.append("time,");
         builder.append("accX,");
+        builder.append("accY,");
         builder.append("accZ,");
         builder.append("asX,");
         builder.append("asY,");
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HX)).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HY)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append(",");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append("\n");
 
         return builder.toString();
     }
