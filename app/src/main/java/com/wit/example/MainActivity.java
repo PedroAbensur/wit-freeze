@@ -215,18 +215,18 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        builder.append(currentTime).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.HX)).append(",");
-        builder.append(bwt901ble.getDeviceData(WitSensorKey.HY)).append(",");
+        builder.append(currentTime).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HX)).append("\t");
+        builder.append(bwt901ble.getDeviceData(WitSensorKey.HY)).append("\t");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append("\n");
 
         return builder.toString();
