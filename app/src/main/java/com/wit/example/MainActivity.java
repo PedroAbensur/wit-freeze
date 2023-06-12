@@ -210,12 +210,12 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         return builder.toString();
     }
 
-    private String buildSensorData(Bwt901ble bwt901ble, long startTime) {
+    private String buildSensorData(Bwt901ble bwt901ble) {
         StringBuilder builder = new StringBuilder();
 
         long currentTime = Calendar.getInstance().getTimeInMillis();
 
-        builder.append(startTime - currentTime).append(",");
+        builder.append(currentTime).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX).replace(",",".")).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY).replace(",",".")).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ).replace(",",".")).append(",");
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                     bwt901ble = bwt901bleList.get(i);
                 }
                 while (writeOnSensorData) {
-                    writeContent += buildSensorData(bwt901ble, Calendar.getInstance().getTimeInMillis());
+                    writeContent += buildSensorData(bwt901ble);
                     try {
                         sleep(100);
                     } catch (InterruptedException e) {
