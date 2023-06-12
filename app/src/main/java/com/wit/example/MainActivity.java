@@ -1,5 +1,7 @@
 package com.wit.example;
 
+import static java.lang.Thread.sleep;
+
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
 import java.util.Date;
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
         while (!destroyed) {
             try {
-                Thread.sleep(100);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -311,6 +313,11 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                 }
                 while (writeOnSensorData) {
                     writeContent += buildSensorData(bwt901ble);
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             thread.start();
