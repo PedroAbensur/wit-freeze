@@ -210,12 +210,12 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         return builder.toString();
     }
 
-    private String buildSensorData(Bwt901ble bwt901ble) {
+    private String buildSensorData(Bwt901ble bwt901ble, long startTime) {
         StringBuilder builder = new StringBuilder();
 
-        Date currentTime = Calendar.getInstance().getTime();
+        long currentTime = Calendar.getInstance().getTimeInMillis();
 
-        builder.append(currentTime).append(",");
+        builder.append(startTime - currentTime).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccX).replace(",",".")).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccY).replace(",",".")).append(",");
         builder.append(bwt901ble.getDeviceData(WitSensorKey.AccZ).replace(",",".")).append(",");
@@ -230,40 +230,6 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         builder.append(bwt901ble.getDeviceData(WitSensorKey.HZ).replace(",",".")).append("\n");
 
         return builder.toString();
-    }
-
-    private void writeSensorData(String fileName, boolean deleteOld) {
-        File file = new File(getExternalFilesDir(null), fileName);
-        boolean fileExists = file.exists();
-
-        if (fileExists && deleteOld) {
-            file.delete();
-            fileExists = false;
-        }
-
-        FileWriter fileWriter = null;
-        BufferedWriter bufferedWriter = null;
-        try {
-            fileWriter = new FileWriter(file);
-            bufferedWriter = new BufferedWriter(fileWriter);
-        } catch (IOException e) {
-            Log.e(TAG, "Error while handling the file: " + e);
-            return;
-        }
-
-        try {
-            if (!fileExists)
-                bufferedWriter.write(buildSensorDataTable());
-
-            for (int i = 0; i < bwt901bleList.size(); i++) {
-                Bwt901ble bwt901ble = bwt901bleList.get(i);
-                bufferedWriter.write(buildSensorData(bwt901ble));
-            }
-
-            bufferedWriter.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Error while writing to the file: " + e);
-        }
     }
 
     private void writeSensorDataString(String fileName, boolean deleteOld) {
@@ -312,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                     bwt901ble = bwt901bleList.get(i);
                 }
                 while (writeOnSensorData) {
-                    writeContent += buildSensorData(bwt901ble);
+                    writeContent += buildSensorData(bwt901ble, Calendar.getInstance().getTimeInMillis());
                     try {
                         sleep(100);
                     } catch (InterruptedException e) {
