@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         try {
             outputStreamWriter =
                     new OutputStreamWriter(
-                            getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE));
+                            getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE | Context.MODE_APPEND));
         } catch (IOException e) {
             Log.e(TAG, "Error while handling the file: " + e);
             return;
