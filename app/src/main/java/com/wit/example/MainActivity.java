@@ -86,11 +86,9 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     public void startDiscovery() {
-
         for (int i = 0; i < bwt901bleList.size(); i++) {
             Bwt901ble bwt901ble = bwt901bleList.get(i);
             bwt901ble.removeRecordObserver(this);
@@ -234,16 +232,25 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
         return builder.toString();
     }
 
-    private void writeSensorData(Bwt901ble bwt901ble, String fileName) {
+    private void writeSensorData() {
         OutputStreamWriter outputStreamWriter = null;
 
+        String fileName = "test.txt";
+
         try {
-            outputStreamWriter = 
+            outputStreamWriter =
                     new OutputStreamWriter(
                             getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE));
         } catch (IOException e) {
             Log.e(TAG, "Error while handling the file: " + e);
             return;
+        }
+
+
+        // TODO: Fix to be able to function with multiple sensors
+        Bwt901ble bwt901ble = null;
+        for (int i = 0; i < bwt901bleList.size(); i++) {
+            bwt901ble = bwt901bleList.get(i);
         }
 
         try {
@@ -267,11 +274,8 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.parar_escrita));
             writeOnSensorData = true;
 
-            for (int i = 0; i < bwt901bleList.size(); i++) {
-                Bwt901ble bwt901ble = bwt901bleList.get(i);
-                writeSensorData(bwt901ble, "test.txt");
-            }
-
+            Thread thread = new Thread(this::writeSensorData);
+            thread.start();
         } else {
             writeOnSensorData = false;
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
