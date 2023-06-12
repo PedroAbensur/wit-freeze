@@ -235,13 +235,12 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     }
 
     private void writeSensorData(Bwt901ble bwt901ble, String fileName) {
-        File file = null;
         OutputStreamWriter outputStreamWriter = null;
 
         try {
-            file = new File(Environment.getExternalStorageDirectory() + "/" + File.separator + fileName);
-            file.createNewFile();
-            outputStreamWriter = new OutputStreamWriter(this.openFileOutput("test.txt", Context.MODE_PRIVATE));
+            outputStreamWriter = 
+                    new OutputStreamWriter(
+                            getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE));
         } catch (IOException e) {
             Log.e(TAG, "Error while handling the file: " + e);
             return;
