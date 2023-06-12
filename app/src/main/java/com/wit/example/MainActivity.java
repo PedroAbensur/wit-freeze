@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
 
     @Override
     public void onRecord(Bwt901ble bwt901ble) {
-        String deviceData = buildSensorDataTable() + buildSensorData(bwt901ble);
+        String deviceData = getDeviceData(bwt901ble);
         Log.d(TAG, "device data [ " + bwt901ble.getDeviceName() + "] = " + deviceData);
     }
 
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             for (int i = 0; i < bwt901bleList.size(); i++) {
                 // Make all devices accelerometer calibrated
                 Bwt901ble bwt901ble = bwt901bleList.get(i);
-                String deviceData = buildSensorData(bwt901ble);
+                String deviceData = getDeviceData(bwt901ble);
                 text.append(deviceData);
             }
 
@@ -161,6 +161,31 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                 deviceDataTextView.setText(text.toString());
             });
         }
+    }
+    private String getDeviceData(Bwt901ble bwt901ble) {
+        String content;
+
+        StringBuilder builder = new StringBuilder();
+        Date currentTime = Calendar.getInstance().getTime();
+        builder.append(currentTime).append("\n");
+        builder.append(bwt901ble.getDeviceName()).append("\n");
+        builder.append(getString(R.string.accX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccX)).append("g \t");
+        builder.append(getString(R.string.accY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccY)).append("g \t");
+        builder.append(getString(R.string.accZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AccZ)).append("g \n");
+        builder.append(getString(R.string.asX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsX)).append("°/s \t");
+        builder.append(getString(R.string.asY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsY)).append("°/s \t");
+        builder.append(getString(R.string.asZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AsZ)).append("°/s \n");
+        builder.append(getString(R.string.angleX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleX)).append("° \t");
+        builder.append(getString(R.string.angleY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleY)).append("° \t");
+        builder.append(getString(R.string.angleZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.AngleZ)).append("° \n");
+        builder.append(getString(R.string.hX)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HX)).append("\t");
+        builder.append(getString(R.string.hY)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HY)).append("\t");
+        builder.append(getString(R.string.hZ)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.HZ)).append("\n");
+        builder.append(getString(R.string.t)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.T)).append("\n");
+        builder.append(getString(R.string.electricQuantityPercentage)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.ElectricQuantityPercentage)).append("\n");
+        builder.append(getString(R.string.versionNumber)).append(":").append(bwt901ble.getDeviceData(WitSensorKey.VersionNumber)).append("\n");
+
+        return builder.toString();
     }
 
     private String buildSensorDataTable() {
