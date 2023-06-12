@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private List<Bwt901ble> bwt901bleList = new ArrayList<>();
+    private Thread writeThread = null;
 
     private boolean destroyed = true;
     private boolean writeOnSensorData = false;
@@ -246,16 +247,15 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             return;
         }
 
-
-        // TODO: Fix to be able to function with multiple sensors
-        Bwt901ble bwt901ble = null;
-        for (int i = 0; i < bwt901bleList.size(); i++) {
-            bwt901ble = bwt901bleList.get(i);
-        }
-
         try {
-            while (writeOnSensorData)
+            while (writeOnSensorData) {
+                Bwt901ble bwt901ble = null;
+                for (int i = 0; i < bwt901bleList.size(); i++) {
+                    bwt901ble = bwt901bleList.get(i);
+                }
                 outputStreamWriter.write(buildSensorData(bwt901ble));
+                outputStreamWriter.flush();
+            }
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e(TAG, "Error while writing to the file: " + e);
@@ -274,8 +274,8 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.parar_escrita));
             writeOnSensorData = true;
 
-            Thread thread = new Thread(this::writeSensorData);
-            thread.start();
+            writeThread = new Thread(this::writeSensorData);
+            writeThread.start();
         } else {
             writeOnSensorData = false;
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
