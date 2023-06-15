@@ -67,11 +67,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
-                    android:id="@+id/appliedCalibrationButton"
+                    android:id="@+id/rotulateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/applied_calibration" />
+                    android:text="@string/rotular_leitura" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -86,11 +86,11 @@
                     android:text="@string/Start_field_calibration" />
 
                 <Button
-                    android:id="@+id/endFieldCalibrationButton"
+                    android:id="@+id/appliedCalibrationButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/End_field_calibration" />
+                    android:text="@string/applied_calibration" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

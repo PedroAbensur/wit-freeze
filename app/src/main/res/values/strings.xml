@@ -5,7 +5,7 @@
     <string name="start_search">Iniciar busca</string>
     <string name="stop_search">Parar busca</string>
     <string name="control_devices">Dispositivos</string>
-    <string name="applied_calibration">Aplicar aplicação</string>
+    <string name="applied_calibration">Aplicar calibração</string>
     <string name="devices_data">Dados de Dispositivos</string>
 
     <string name="chipTime">Chip time</string>
@@ -37,4 +37,5 @@
     <string name="read_reg_03">Ler registro 03</string>
     <string name="escrever_dados">Escrever dados</string>
     <string name="parar_escrita">Parar Escrita</string>
+    <string name="rotular_leitura">Rotular Leitura</string>
 </resources>
