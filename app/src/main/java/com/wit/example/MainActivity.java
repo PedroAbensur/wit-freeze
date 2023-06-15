@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     private Button writeSensorDataButton = null;
     private Button rotulateButton = null;
     private String writeContent = "";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss:SSS ");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss:SSS");
+    private SimpleDateFormat dateFormatFile = new SimpleDateFormat("dd-MM-YYYY_(HH.mm.ss.SSS)");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
     @Override
     public void onRecord(Bwt901ble bwt901ble) {
         String deviceData = getDeviceData(bwt901ble);
-        Log.d(TAG, "device data [ " + bwt901ble.getDeviceName() + "] = " + deviceData);
+        //Log.d(TAG, "device data [ " + bwt901ble.getDeviceName() + "] = " + deviceData);
     }
 
     private void refreshDataTh() {
@@ -287,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
                 while (writeOnSensorData) {
                     writeContent += buildSensorData(bwt901ble);
                     try {
-                        sleep(100);
+                        sleep(5);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -299,7 +301,9 @@ public class MainActivity extends AppCompatActivity implements IBluetoothFoundOb
             writeSensorDataButton.setText(getString(R.string.escrever_dados));
 
             final Thread thread = new Thread(() -> {
-                writeSensorDataString("test.csv", true);
+                Date date = new Date();
+                String dateString = dateFormatFile.format(date);
+                writeSensorDataString("output-" + dateString + ".csv", true);
             });
             thread.start();
         }
