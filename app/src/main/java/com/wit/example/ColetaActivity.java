@@ -48,8 +48,6 @@ public class ColetaActivity extends AppCompatActivity {
             return;
         }
 
-
-
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
             if (fogApertado) {

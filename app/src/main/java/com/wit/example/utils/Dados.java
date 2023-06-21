@@ -31,7 +31,7 @@ public class Dados {
         Date currentTime = Calendar.getInstance().getTime();
 
         data += terminaLinha(currentTime.toString());
-        data += terminaLinha(sensor.getDeviceName());
+        // data += terminaLinha(sensor.getDeviceName());
         data += terminaLinha(r.getString(R.string.accX) + sensorDadoT(WitSensorKey.AccX) +"g");
         data += terminaLinha(r.getString(R.string.accY) + sensorDadoT(WitSensorKey.AccY) +"g");
         data += terminaLinha(r.getString(R.string.accZ) + sensorDadoT(WitSensorKey.AccZ) +"g");
@@ -46,13 +46,10 @@ public class Dados {
         data += terminaLinha(r.getString(R.string.hZ) + sensorDadoT(WitSensorKey.HZ));
         data += terminaLinha(r.getString(R.string.hZ) + sensorDadoT(WitSensorKey.HZ));
         data += terminaLinha(r.getString(R.string.hZ) + sensorDadoT(WitSensorKey.HZ));
-        data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));
-        data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));
-        data += terminaLinha(r.getString(R.string.p) + sensorDadoT(WitSensorKey.ElectricQuantityPercentage));
-        data += terminaLinha(r.getString(R.string.versionNumber) + sensorDadoT(WitSensorKey.VersionNumber));
+        // data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));
+        // data += terminaLinha(r.getString(R.string.p) + sensorDadoT(WitSensorKey.ElectricQuantityPercentage));
+        // data += terminaLinha(r.getString(R.string.versionNumber) + sensorDadoT(WitSensorKey.VersionNumber));
 
         return data;
     }
-
-
 }

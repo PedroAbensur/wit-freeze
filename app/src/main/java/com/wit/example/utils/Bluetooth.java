@@ -33,7 +33,7 @@ public class Bluetooth implements IBluetoothFoundObserver, IBwt901bleRecordObser
 
     @Override
     public void onRecord(Bwt901ble bwt901ble) {
-
+        Log.d(TAG, Dados.buildTextViewDeviceData());
     }
 
     @Override
