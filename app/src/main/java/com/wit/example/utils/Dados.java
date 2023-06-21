@@ -19,7 +19,6 @@ public class Dados {
         return ": " + Configuracoes.getSensor().getDeviceData(key);
     }
     public static String buildTextViewDeviceData() {
-        Bwt901ble sensor = Configuracoes.getSensor();
         Resources r = App.getContext().getResources();
 
         if (Configuracoes.getSensor() == null || r == null ) {

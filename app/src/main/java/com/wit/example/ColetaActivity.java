@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -22,7 +23,6 @@ public class ColetaActivity extends AppCompatActivity {
     private String TAG = ColetaActivity.class.getSimpleName();
     private Bluetooth bluetooth;
     public TextView textViewDados;
-    public boolean lifeCycleTextView;
     public DataReceiver dataReceiver;
     public Button buttonColetar;
     public AppCompatButton buttonFOG;
@@ -48,6 +48,8 @@ public class ColetaActivity extends AppCompatActivity {
             return;
         }
 
+        buttonFOG.setBackgroundTintList(ColorStateList.valueOf(R.drawable.round_button_colors));
+
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
             if (fogApertado) {
@@ -71,24 +73,10 @@ public class ColetaActivity extends AppCompatActivity {
     }
 
     private void handleTextViewDados() {
-        lifeCycleTextView = true;
-
-        Thread textViewThread = new Thread(() -> {
-            while (lifeCycleTextView) {
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "handleTextViewDados: " + e);
-                }
-
-                String dados = buildTextViewDeviceData();
-                runOnUiThread(() -> {
-                    textViewDados.setText(dados);
-                });
-            }
+        String dados = buildTextViewDeviceData();
+        runOnUiThread(() -> {
+            textViewDados.setText(dados);
         });
-
-        textViewThread.start();
     }
 
     private void handleDataReceiver() {
@@ -105,7 +93,7 @@ public class ColetaActivity extends AppCompatActivity {
             String action = intent.getAction();
 
             if (action.equals(Metodos.novosDados(context))) {
-
+                handleTextViewDados();
             }
         }
     }

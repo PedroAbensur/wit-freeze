@@ -33,7 +33,7 @@ public class Bluetooth implements IBluetoothFoundObserver, IBwt901bleRecordObser
 
     @Override
     public void onRecord(Bwt901ble bwt901ble) {
-        Log.d(TAG, Dados.buildTextViewDeviceData());
+        enviarDados();
     }
 
     @Override
@@ -165,6 +165,7 @@ public class Bluetooth implements IBluetoothFoundObserver, IBwt901bleRecordObser
 
     public void enviarDados() {
         Intent intent = new Intent();
-
+        intent.setAction(Metodos.novosDados(mContext));
+        mContext.sendBroadcast(intent);
     }
 }
