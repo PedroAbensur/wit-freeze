@@ -34,8 +34,6 @@ public class ColetaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coleta);
         handleDataReceiver();
 
-        bluetooth = new Bluetooth(this);
-
         textViewDados = (TextView) findViewById(R.id.textViewDados);
         buttonColetar = (Button) findViewById(R.id.buttonColetar);
         buttonFOG = (AppCompatButton) findViewById(R.id.buttonFOG);
@@ -50,12 +48,16 @@ public class ColetaActivity extends AppCompatActivity {
             return;
         }
 
+
+
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
             if (fogApertado) {
-
+                buttonFOG.setPressed(false);
+                fogApertado = false;
             } else {
-
+                buttonFOG.setPressed(true);
+                fogApertado = true;
             }
         });
     }

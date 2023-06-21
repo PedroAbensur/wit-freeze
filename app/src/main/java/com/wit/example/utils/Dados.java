@@ -2,6 +2,7 @@ package com.wit.example.utils;
 
 import android.content.res.Resources;
 
+import com.wit.example.App;
 import com.wit.example.R;
 import com.wit.witsdk.modular.sensor.example.ble5.Bwt901ble;
 import com.wit.witsdk.modular.sensor.modular.processor.constant.WitSensorKey;
@@ -19,9 +20,9 @@ public class Dados {
     }
     public static String buildTextViewDeviceData() {
         Bwt901ble sensor = Configuracoes.getSensor();
-        Resources r = Resources.getSystem();
+        Resources r = App.getContext().getResources();
 
-        if (sensor == null || r == null ) {
+        if (Configuracoes.getSensor() == null || r == null ) {
             return null;
         }
 
