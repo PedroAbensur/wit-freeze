@@ -51,10 +51,8 @@ public class ColetaActivity extends AppCompatActivity {
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
             if (fogApertado) {
-                buttonFOG.setPressed(false);
                 fogApertado = false;
             } else {
-                buttonFOG.setPressed(true);
                 fogApertado = true;
             }
         });
