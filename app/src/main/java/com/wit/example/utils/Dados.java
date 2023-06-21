@@ -107,7 +107,6 @@ public class Dados {
         String stringDate = dateFormat.format(date);
 
         data += date.toString() + ",\"";
-
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccX));
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccY));
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccZ));
@@ -119,8 +118,8 @@ public class Dados {
         data += finalizaLinha(sensorDadoF(WitSensorKey.AngleZ));
         data += finalizaLinha(sensorDadoF(WitSensorKey.HX));
         data += finalizaLinha(sensorDadoF(WitSensorKey.HY));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.HZ));
-        data += ColetaActivity.fogApertado ? "1" : "0" + "\n";
+        data += sensorDadoF(WitSensorKey.HZ) + "\",";
+        data += (ColetaActivity.fogApertado ? "1" : "0") + "\n";
 
         return data;
     }
