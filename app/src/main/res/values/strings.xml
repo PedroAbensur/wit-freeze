@@ -25,7 +25,7 @@
     <string name="hY">MagY</string>
     <string name="hZ">MagZ</string>
     <string name="hM">|Mag|</string>
-    <string name="electricQuantityPercentage">power</string>
+    <string name="p">power</string>
     <string name="t">Temp</string>
     <string name="q0">Q0</string>
     <string name="q1">Q1</string>
@@ -38,4 +38,17 @@
     <string name="escrever_dados">Escrever dados</string>
     <string name="parar_escrita">Parar Escrita</string>
     <string name="rotular_leitura">Rotular Leitura</string>
+    <string name="configurar">Configurar</string>
+    <string name="coletar">Coletar</string>
+    <string name="conectar">Conectar</string>
+    <string name="desconectar">Desconectar</string>
+    <string name="buscando">Buscando...</string>
+    <string name="desconectado">Desconectado</string>
+    <string name="conectado">Conectado</string>
+    <string name="calibrar">Calibrar</string>
+    <string name="calibra_o">Calibração</string>
+    <string name="calibrado">Calibrado</string>
+    <string name="calibrando">Calibrando...</string>
+    <string name="fog">FOG</string>
+
 </resources>
