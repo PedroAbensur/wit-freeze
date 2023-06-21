@@ -40,7 +40,7 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //buttonColetar.setEnabled(Configuracoes.sensorStatus());
+        buttonColetar.setEnabled(Configuracoes.sensorStatus());
     }
 
     private void irParaActivity(Class activity) {

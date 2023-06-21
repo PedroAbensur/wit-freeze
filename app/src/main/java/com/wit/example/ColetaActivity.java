@@ -22,7 +22,7 @@ public class ColetaActivity extends AppCompatActivity {
     public TextView textViewDados;
     public DataReceiver dataReceiver;
     public Button buttonColetar;
-    public AppCompatButton buttonFOG;
+    public static AppCompatButton buttonFOG;
     public static boolean fogApertado;
     public static boolean coletando;
 

@@ -119,7 +119,7 @@ public class Dados {
         data += finalizaLinha(sensorDadoF(WitSensorKey.HX));
         data += finalizaLinha(sensorDadoF(WitSensorKey.HY));
         data += sensorDadoF(WitSensorKey.HZ) + "\",";
-        data += (ColetaActivity.fogApertado ? "1" : "0") + "\n";
+        data += (ColetaActivity.buttonFOG.isPressed() ? "1" : "0") + "\n";
 
         return data;
     }
