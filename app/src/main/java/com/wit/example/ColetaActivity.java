@@ -1,7 +1,6 @@
 package com.wit.example;
 
 import static com.wit.example.utils.Dados.buildTextViewDeviceData;
-import static java.lang.Thread.sleep;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -12,21 +11,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.wit.example.utils.Bluetooth;
+import com.wit.example.utils.Dados;
 import com.wit.example.utils.Metodos;
 
 public class ColetaActivity extends AppCompatActivity {
     private String TAG = ColetaActivity.class.getSimpleName();
-    private Bluetooth bluetooth;
     public TextView textViewDados;
     public DataReceiver dataReceiver;
     public Button buttonColetar;
     public AppCompatButton buttonFOG;
-    public boolean fogApertado;
+    public static boolean fogApertado;
+    public static boolean coletando;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +65,20 @@ public class ColetaActivity extends AppCompatActivity {
             return;
         }
 
-        buttonColetar.setOnClickListener((view) -> {
+        coletando = false;
 
+        buttonColetar.setOnClickListener((view) -> {
+            if (coletando) {
+                coletando = false;
+                buttonColetar.setText(getString(R.string.escrever_dados));
+
+                Dados.finalizarColeta();
+            } else {
+                coletando = true;
+                buttonColetar.setText(getString(R.string.parar_escrita));
+
+                Dados.iniciarColeta();
+            }
         });
     }
 
