@@ -106,7 +106,7 @@ public class Dados {
         Date date = new Date();
         String stringDate = dateFormat.format(date);
 
-        data += date.toString() + ",\"";
+        data += stringDate + ",\"";
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccX));
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccY));
         data += finalizaLinha(sensorDadoF(WitSensorKey.AccZ));
