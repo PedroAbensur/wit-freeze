@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
@@ -173,7 +174,10 @@ public class Dados {
     }
 
     private static void gerarArquivoDados(String fileName, boolean deleteOld) {
-        File file = new File(App.getContext().getExternalFilesDir(null), fileName);
+        String path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
+                .toString();
+        File file =
+                new File(path, fileName);
         boolean fileExists = file.exists();
 
         if (fileExists && deleteOld) {
