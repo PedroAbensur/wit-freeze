@@ -41,9 +41,12 @@ public class Dados {
 
     private static Context mContext;
 
+    private static EditText editText;
+
     public Dados(Context context) {
         this.nomeArquivo = "";
         this.mContext = context;
+        this.editText = null;
     }
 
     private static String terminaLinha(String s) {
@@ -159,8 +162,11 @@ public class Dados {
     }
 
     public static void finalizarColeta() {
-        final Thread thread = new Thread(() -> {
+        synchronized (nomeArquivo) {
             gerarNomeArquivo();
+        }
+
+        final Thread thread = new Thread(() -> {
             gerarArquivoDados(nomeArquivo, true);
         });
         thread.start();
