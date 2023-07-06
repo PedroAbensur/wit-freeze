@@ -164,9 +164,15 @@ public class Dados {
     public static void finalizarColeta() {
         synchronized (nomeArquivo) {
             gerarNomeArquivo();
+            nomeArquivo.notifyAll();
         }
 
         final Thread thread = new Thread(() -> {
+            try {
+                nomeArquivo.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             gerarArquivoDados(nomeArquivo, true);
         });
         thread.start();
