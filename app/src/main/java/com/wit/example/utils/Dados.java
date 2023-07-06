@@ -223,14 +223,17 @@ public class Dados {
             if (!text.isEmpty()) {
                 if (!text.matches(ILLEGAL_CHARACTERS)) {
                     nomeArquivo = text + ".csv";
+                    perguntando = false;
                     return;
                 }
             }
             nomeArquivo = gerarNomeComData();
+            perguntando = false;
         });
 
         builder.setNegativeButton("Cancelar", (dialogInterface, i) -> {
             nomeArquivo = gerarNomeComData();
+            perguntando = false;
         });
 
         builder.show();
