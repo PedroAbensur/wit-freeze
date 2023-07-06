@@ -65,17 +65,19 @@ public class ColetaActivity extends AppCompatActivity {
 
         coletando = false;
 
+        Dados dados = new Dados(this);
+
         buttonColetar.setOnClickListener((view) -> {
             if (coletando) {
                 coletando = false;
                 buttonColetar.setText(getString(R.string.escrever_dados));
 
-                Dados.finalizarColeta();
+                dados.finalizarColeta();
             } else {
                 coletando = true;
                 buttonColetar.setText(getString(R.string.parar_escrita));
 
-                Dados.iniciarColeta();
+                dados.iniciarColeta();
             }
         });
     }

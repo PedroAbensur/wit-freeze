@@ -3,8 +3,13 @@ package com.wit.example.utils;
 import static com.wit.example.ColetaActivity.coletando;
 import static java.lang.Thread.sleep;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.wit.example.App;
 import com.wit.example.ColetaActivity;
@@ -26,8 +31,20 @@ public class Dados {
             new SimpleDateFormat("dd-MM-YYYY HH:mm:ss:SSS");
     private static final SimpleDateFormat dateFormatFile =
             new SimpleDateFormat("dd-MM-YYYY_(HH.mm.ss.SSS)");
+
+    private static final String ILLEGAL_CHARACTERS =
+            "@\"^[\\w\\-. ]+$\";\n";
+
+    public static String nomeArquivo;
+
     public static String dadosEscrita;
 
+    private static Context mContext;
+
+    public Dados(Context context) {
+        this.nomeArquivo = "";
+        this.mContext = context;
+    }
 
     private static String terminaLinha(String s) {
         return s += "\n";
@@ -73,6 +90,7 @@ public class Dados {
 
         table += "time,";
         table += "accX,";
+        table += "accY,";
         table += "accZ,";
         table += "asX,";
         table += "asY,";
@@ -142,9 +160,8 @@ public class Dados {
 
     public static void finalizarColeta() {
         final Thread thread = new Thread(() -> {
-            Date date = new Date();
-            String dateString = dateFormatFile.format(date);
-            gerarArquivoDados("output-" + dateString + ".csv", true);
+            gerarNomeArquivo();
+            gerarArquivoDados(nomeArquivo, true);
         });
         thread.start();
     }
@@ -171,11 +188,43 @@ public class Dados {
         try {
             if (!fileExists)
                 bufferedWriter.write(buildSensorDataTable());
-            bufferedWriter.write(dadosEscrita);
 
+            bufferedWriter.write(dadosEscrita);
             bufferedWriter.close();
         } catch (IOException e) {
             Log.e(TAG, "Error while writing to the file: " + e);
         }
+    }
+
+    private static String gerarNomeComData() {
+        final Date date = new Date();
+        final String dateString = dateFormatFile.format(date);
+        return "output-" + dateString + ".csv";
+    }
+
+    private static void gerarNomeArquivo() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Escolha o nome do arquivo:");
+
+        final EditText input = new EditText(mContext);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("Aceitar", (dialogInterface, i) -> {
+            String text = input.getText().toString().trim();
+            if (!text.isEmpty()) {
+                if (!text.matches(ILLEGAL_CHARACTERS)) {
+                    nomeArquivo = text + ".csv";
+                    return;
+                }
+            }
+            nomeArquivo = gerarNomeComData();
+        });
+
+        builder.setNegativeButton("Cancelar", (dialogInterface, i) -> {
+            nomeArquivo = gerarNomeComData();
+        });
+
+        builder.show();
     }
 }
