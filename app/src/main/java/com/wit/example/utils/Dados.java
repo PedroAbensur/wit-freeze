@@ -41,12 +41,12 @@ public class Dados {
 
     private static Context mContext;
 
-    private static EditText editText;
+    private static Boolean perguntando;
 
     public Dados(Context context) {
         this.nomeArquivo = "";
         this.mContext = context;
-        this.editText = null;
+        this.perguntando = false;
     }
 
     private static String terminaLinha(String s) {
@@ -162,16 +162,10 @@ public class Dados {
     }
 
     public static void finalizarColeta() {
-        synchronized (nomeArquivo) {
-            gerarNomeArquivo();
-            nomeArquivo.notifyAll();
-        }
-
+        gerarNomeArquivo();
         final Thread thread = new Thread(() -> {
-            try {
-                nomeArquivo.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            while (perguntando) {
+                // Do nothing =P
             }
             gerarArquivoDados(nomeArquivo, true);
         });
@@ -215,6 +209,8 @@ public class Dados {
     }
 
     private static void gerarNomeArquivo() {
+        perguntando = true;
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Escolha o nome do arquivo:");
 
