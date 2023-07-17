@@ -82,6 +82,7 @@ public class Dados {
         data += terminaLinha(r.getString(R.string.hX) + sensorDadoT(WitSensorKey.HX));
         data += terminaLinha(r.getString(R.string.hY) + sensorDadoT(WitSensorKey.HY));
         data += terminaLinha(r.getString(R.string.hZ) + sensorDadoT(WitSensorKey.HZ));
+        data += terminaLinha("Rotulando: " + ColetaActivity.fogApertado);
         // data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));
         // data += terminaLinha(r.getString(R.string.p) + sensorDadoT(WitSensorKey.ElectricQuantityPercentage));
         // data += terminaLinha(r.getString(R.string.versionNumber) + sensorDadoT(WitSensorKey.VersionNumber));
@@ -141,7 +142,7 @@ public class Dados {
         data += finalizaLinha(sensorDadoF(WitSensorKey.HX));
         data += finalizaLinha(sensorDadoF(WitSensorKey.HY));
         data += sensorDadoF(WitSensorKey.HZ) + "\",";
-        data += (ColetaActivity.buttonFOG.isPressed() ? "1" : "0") + "\n";
+        data += (ColetaActivity.fogApertado ? "1" : "0") + "\n";
 
         return data;
     }

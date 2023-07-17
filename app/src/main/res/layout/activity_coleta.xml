@@ -40,9 +40,12 @@
             android:layout_height="200dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/round_button"
+            android:backgroundTint="#0A5AC8"
             android:text="@string/fog"
-            android:textSize="70dp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FEFEFE"
+            android:textSize="30dp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

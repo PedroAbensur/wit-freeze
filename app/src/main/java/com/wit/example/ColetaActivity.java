@@ -1,6 +1,7 @@
 package com.wit.example;
 
 import static com.wit.example.utils.Dados.buildTextViewDeviceData;
+import static com.wit.example.utils.Dados.dadosEscrita;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -10,7 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,15 +48,18 @@ public class ColetaActivity extends AppCompatActivity {
         if (buttonFOG == null) {
             return;
         }
-
-        buttonFOG.setBackgroundTintList(ColorStateList.valueOf(R.drawable.round_button_colors));
-
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
             if (fogApertado) {
                 fogApertado = false;
-            } else {
+                buttonFOG.setBackgroundTintList(ColorStateList.valueOf(Color.argb(100, 76, 175, 80)));
+                buttonFOG.setText("Rotular");
+
+            }else{
                 fogApertado = true;
+                buttonFOG.setBackgroundTintList(ColorStateList.valueOf(Color.argb(100,10,90,200)));
+                buttonFOG.setText("Rotulando");
+
             }
         });
     }
