@@ -10,7 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,6 +29,13 @@ public class ColetaActivity extends AppCompatActivity {
     public static boolean fogApertado;
     public static boolean coletando;
 
+    private CountDownTimer timer;
+    private long totalTimeInMillis = 0;
+    private boolean isTimerRunning = false;
+    private TextView timerTextView;
+    private Handler timerHandler = new Handler();
+    private long elapsedTimeInMillis = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +49,22 @@ public class ColetaActivity extends AppCompatActivity {
         handleTextViewDados();
         handleButtonColetar();
         handleButtonFog();
+        timerTextView = findViewById(R.id.timerTextView);
+    }
+
+
+    private ColorStateList getRoundButtonColors() {
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_pressed }, // pressed
+                new int[] {} // default
+        };
+
+        int[] colors = new int[] {
+                Color.RED, // red color for pressed state
+                Color.BLUE // gray color for default state
+        };
+
+        return new ColorStateList(states, colors);
     }
 
     private void handleButtonFog() {
@@ -46,7 +72,7 @@ public class ColetaActivity extends AppCompatActivity {
             return;
         }
 
-        buttonFOG.setBackgroundTintList(ColorStateList.valueOf(R.drawable.round_button_colors));
+        buttonFOG.setBackgroundTintList(getRoundButtonColors());
 
         fogApertado = false;
         buttonFOG.setOnClickListener((view) -> {
@@ -73,11 +99,13 @@ public class ColetaActivity extends AppCompatActivity {
                 buttonColetar.setText(getString(R.string.escrever_dados));
 
                 dados.finalizarColeta();
+                stopTimer();
             } else {
                 coletando = true;
                 buttonColetar.setText(getString(R.string.parar_escrita));
 
                 dados.iniciarColeta();
+                startTimer();
             }
         });
     }
@@ -106,5 +134,45 @@ public class ColetaActivity extends AppCompatActivity {
                 handleTextViewDados();
             }
         }
+    }
+
+    private void startTimer() {
+        if (isTimerRunning) {
+            return;
+        }
+
+        isTimerRunning = true;
+        elapsedTimeInMillis = 0; // Reset the elapsed time when starting the timer
+
+        timerHandler.postDelayed(timerRunnable, 1000);
+    }
+
+    private void stopTimer() {
+        if (!isTimerRunning) {
+            return;
+        }
+
+        isTimerRunning = false;
+        timerHandler.removeCallbacks(timerRunnable);
+        elapsedTimeInMillis = 0; // Reset the elapsed time when stopping the timer
+        updateTimerText(); // Update the timer text immediately after stopping
+    }
+
+    private Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            elapsedTimeInMillis += 1000;
+            updateTimerText();
+            timerHandler.postDelayed(this, 1000);
+        }
+    };
+
+    private void updateTimerText() {
+        long hours = elapsedTimeInMillis / 3600000;
+        long minutes = (elapsedTimeInMillis % 3600000) / 60000;
+        long seconds = (elapsedTimeInMillis % 60000) / 1000;
+
+        String timerText = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        runOnUiThread(() -> timerTextView.setText(timerText));
     }
 }
