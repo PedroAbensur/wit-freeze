@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class Dados {
     private static final String TAG = Dados.class.getSimpleName();
@@ -38,16 +39,21 @@ public class Dados {
 
     public static String nomeArquivo;
 
-    public static String dadosEscrita;
+    public static LinkedList<String> dadosEscrita;
+
+    public static int totalSeconds;
 
     private static Context mContext;
 
     private static Boolean perguntando;
 
+
+
     public Dados(Context context) {
         this.nomeArquivo = "";
         this.mContext = context;
         this.perguntando = false;
+        this.dadosEscrita = new LinkedList<>();
     }
 
     private static String terminaLinha(String s) {
@@ -82,8 +88,8 @@ public class Dados {
         data += terminaLinha(r.getString(R.string.hX) + sensorDadoT(WitSensorKey.HX));
         data += terminaLinha(r.getString(R.string.hY) + sensorDadoT(WitSensorKey.HY));
         data += terminaLinha(r.getString(R.string.hZ) + sensorDadoT(WitSensorKey.HZ));
-        data += terminaLinha("Rotulando: " + ColetaActivity.fogApertado);
-        // data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));
+        data += terminaLinha("Bebendo Água: " + ColetaActivity.drinking);
+        // data += terminaLinha(r.getString(R.string.t) + sensorDadoT(WitSensorKey.T));A
         // data += terminaLinha(r.getString(R.string.p) + sensorDadoT(WitSensorKey.ElectricQuantityPercentage));
         // data += terminaLinha(r.getString(R.string.versionNumber) + sensorDadoT(WitSensorKey.VersionNumber));
 
@@ -91,28 +97,28 @@ public class Dados {
     }
 
     public static String buildSensorDataTable() {
-        String table = "";
+        StringBuilder table = new StringBuilder();
 
-        table += "time,";
-        table += "accX,";
-        table += "accY,";
-        table += "accZ,";
-        table += "asX,";
-        table += "asY,";
-        table += "asZ,";
-        table += "angleX,";
-        table += "angleY,";
-        table += "angleZ,";
-        table += "hX,";
-        table += "hY,";
-        table += "hZ,";
-        table += "tag\n";
+        table.append("time,")
+                .append("accX,")
+                .append("accY,")
+                .append("accZ,")
+                .append("asX,")
+                .append("asY,")
+                .append("asZ,")
+                .append("angleX,")
+                .append("angleY,")
+                .append("angleZ,")
+                .append("hX,")
+                .append("hY,")
+                .append("hZ,")
+                .append("tag\n");
 
-        return table;
+        return table.toString();
     }
 
     private static String finalizaLinha(String s) {
-        return s += "\",\"";
+        return s + "\",\"";
     }
 
     private static String sensorDadoF(String key) {
@@ -124,35 +130,36 @@ public class Dados {
             return null;
         }
 
-        String data = "";
+        StringBuilder data = new StringBuilder();
 
         Date date = new Date();
         String stringDate = dateFormat.format(date);
 
-        data += stringDate + ",\"";
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AccX));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AccY));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AccZ));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AsX));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AsY));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AsZ));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AngleX));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AngleY));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.AngleZ));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.HX));
-        data += finalizaLinha(sensorDadoF(WitSensorKey.HY));
-        data += sensorDadoF(WitSensorKey.HZ) + "\",";
-        data += (ColetaActivity.fogApertado ? "1" : "0") + "\n";
+        data.append(stringDate).append(",\"")
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AccX)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AccY)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AccZ)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AsX)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AsY)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AsZ)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AngleX)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AngleY)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.AngleZ)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.HX)))
+                .append(finalizaLinha(sensorDadoF(WitSensorKey.HY)))
+                .append(sensorDadoF(WitSensorKey.HZ)).append("\",")
+                .append(ColetaActivity.drinking? "drinking" : "0").append("\n");
 
-        return data;
+        return data.toString();
     }
-
     public static void iniciarColeta() {
         final Thread thread = new Thread(() -> {
-            dadosEscrita = "";
+            dadosEscrita.clear();
 
             while (coletando) {
-                dadosEscrita += Dados.buildSensorData();
+                dadosEscrita.add(buildSensorData());
+
+
                 try {
                     sleep(5);
                 } catch (InterruptedException e) {
@@ -200,7 +207,9 @@ public class Dados {
             if (!fileExists)
                 bufferedWriter.write(buildSensorDataTable());
 
-            bufferedWriter.write(dadosEscrita);
+            for (String linha: dadosEscrita){
+                bufferedWriter.write(linha);
+            }
             bufferedWriter.close();
         } catch (IOException e) {
             Log.e(TAG, "Error while writing to the file: " + e);
